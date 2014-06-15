@@ -1,0 +1,16 @@
+{
+    "contents" : "# Reproducible Research: Peer Assessment 1\n\n\n## Loading and preprocessing the data\n...{r}  \nActivity <- read.csv('activity.csv', header= TRUE)  \n...\n\n\n## What is mean total number of steps taken per day?\n\n...{r}  \ntotalstepsbydays <- aggregate(Activity$steps ~ Activity$date,data = Activity, FUN= sum) \ntotalstepsbydays[,2] <- as.numeric(totalstepsbydays[,2])\nhist(totalstepsbydays[,2])\nmeanstepsbydays <- aggregate(Activity$steps ~ Activity$date,data = Activity, FUN= mean, is.na=TRUE) \nmedianstepsbydays <- aggregate(Activity$steps ~ Activity$date,data = Activity, FUN= median, is.na=TRUE)\n...\n\n## What is the average daily activity pattern?\n...{r}\nplot(meanstepsbyinterval[,2]~meanstepsbyinterval[,1], type =\"l\")\nmeanstepsbyinterval[which.max(meanstepsbyinterval[,2]),1]\n...\n## Imputing missing values\n\n### Total number of missing values\n\n...{r}\ncountna <- is.na(Activity$steps)\nsum(countna)\n...\n\n...{r}\nActivitycomplete <- Activity\nfor(i in 1:NROW(Activity))\n{\n  if(is.na(Activity[i,1]))\n  {\n  Activitycomplete[i,1] <- meanstepsbyinterval[meanstepsbyinterval[,1]==Activity[i,3],2]\n  }\n}\nCtotalstepsbydays <- aggregate(Activitycomplete$steps ~ Activitycomplete$date,data = Activitycomplete, FUN= sum) \nCtotalstepsbydays[,2] <- as.numeric(Ctotalstepsbydays[,2])\nhist(Ctotalstepsbydays[,2])\nCmeanstepsbydays <- aggregate(Activitycomplete$steps ~ Activitycomplete$date,data = Activitycomplete, FUN= mean) \nCmedianstepsbydays <- aggregate(Activitycomplete$steps ~ Activitycomplete$date,data = Activitycomplete, FUN= median)\nDifference <- meanstepsbydays[,2] - Cmeanstepsbydays[,2]\n...\n\n## Are there differences in activity patterns between weekdays and weekends?\n...{r}\nActivity <- Activity[,1:3]\nDay<- weekdays(as.POSIXct(Activity[,2]))\nActivity <-cbind(Activity,Day)\nDayfactor <- rep('Weekday',NROW(Activity))\nActivity <-cbind(Activity,Dayfactor)\nActivity$Day <- as.character(Activity$Day)\nActivity$Dayfactor <- as.character(Activity$Dayfactor)\nfor(i in 1:NROW(Activity))\n{\n  \n if(Activity[i,4]==\"Sunday\")\n {\n \n Activity[i,5] =\"Weekend\"\n }\n}\nActivity$Day <- as.factor(Activity$Day)\nActivity$Dayfactor <- as.factor(Activity$Dayfactor)\nmeanbydaybyinterval<- aggregate(Activity$steps ~ Activity$interval * Activity$Dayfactor , data =Activity, FUN=mean)\nxyplot(meanbydaybyinterval[,3] ~ meanbydaybyinterval[,1]|meanbydaybyinterval[,2], type ='l')\n...",
+    "created" : 1402804542792.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2363686916",
+    "id" : "A8C73DDB",
+    "lastKnownWriteTime" : 1402828569,
+    "path" : "E:/NewFolder/RepData_PeerAssessment1/PA1_template.Rmd",
+    "project_path" : "PA1_template.Rmd",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_markdown"
+}

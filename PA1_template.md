@@ -13,8 +13,8 @@ Activity <- read.csv('activity.csv', header= TRUE)
 totalstepsbydays <- aggregate(Activity$steps ~ Activity$date,data = Activity, FUN= sum) 
 totalstepsbydays[,2] <- as.numeric(totalstepsbydays[,2])
 hist(totalstepsbydays[,2])
-meanstepsbydays <- aggregate(Activity$steps ~ Activity$date,data = Activity, FUN= mean, is.na=TRUE) 
-medianstepsbydays <- aggregate(Activity$steps ~ Activity$date,data = Activity, FUN= median, is.na=TRUE)
+meanstepsbydays <- aggregate(Activity$steps ~ Activity$date,data = Activity, FUN= mean) 
+medianstepsbydays <- aggregate(Activity$steps ~ Activity$date,data = Activity, FUN= median)
 ...
 
 ## What is the average daily activity pattern?
@@ -24,33 +24,10 @@ meanstepsbyinterval[which.max(meanstepsbyinterval[,2]),1]
 ...
 ## Imputing missing values
 
-### Total number of missing values
 
-...{r}
-countna <- is.na(Activity$steps)
-sum(countna)
-...
-
-...{r}
-Activitycomplete <- Activity
-for(i in 1:NROW(Activity))
-{
-  if(is.na(Activity[i,1]))
-  {
-  Activitycomplete[i,1] <- meanstepsbyinterval[meanstepsbyinterval[,1]==Activity[i,3],2]
-  }
-}
-Ctotalstepsbydays <- aggregate(Activitycomplete$steps ~ Activitycomplete$date,data = Activitycomplete, FUN= sum) 
-Ctotalstepsbydays[,2] <- as.numeric(Ctotalstepsbydays[,2])
-hist(Ctotalstepsbydays[,2])
-Cmeanstepsbydays <- aggregate(Activitycomplete$steps ~ Activitycomplete$date,data = Activitycomplete, FUN= mean) 
-Cmedianstepsbydays <- aggregate(Activitycomplete$steps ~ Activitycomplete$date,data = Activitycomplete, FUN= median)
-Difference <- meanstepsbydays[,2] - Cmeanstepsbydays[,2]
-...
 
 ## Are there differences in activity patterns between weekdays and weekends?
 ...{r}
-Activity <- Activity[,1:3]
 Day<- weekdays(as.POSIXct(Activity[,2]))
 Activity <-cbind(Activity,Day)
 Dayfactor <- rep('Weekday',NROW(Activity))

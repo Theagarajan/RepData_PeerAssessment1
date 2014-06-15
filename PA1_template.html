@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title>Reproducible Research: Peer Assessment 1</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+
+
+
+
+</head>
+
+<body>
+<h1>Reproducible Research: Peer Assessment 1</h1>
+
+<h2>Loading and preprocessing the data</h2>
+
+<p>&hellip;{r}<br/>
+Activity &lt;- read.csv(&#39;activity.csv&#39;, header= TRUE)<br/>
+&hellip;</p>
+
+<h2>What is mean total number of steps taken per day?</h2>
+
+<p>&hellip;{r}<br/>
+totalstepsbydays &lt;- aggregate(Activity$steps ~ Activity$date,data = Activity, FUN= sum) 
+totalstepsbydays[,2] &lt;- as.numeric(totalstepsbydays[,2])
+hist(totalstepsbydays[,2])
+meanstepsbydays &lt;- aggregate(Activity$steps ~ Activity$date,data = Activity, FUN= mean) 
+medianstepsbydays &lt;- aggregate(Activity$steps ~ Activity$date,data = Activity, FUN= median)
+&hellip;</p>
+
+<h2>What is the average daily activity pattern?</h2>
+
+<p>&hellip;{r}
+plot(meanstepsbyinterval[,2]~meanstepsbyinterval[,1], type =&ldquo;l&rdquo;)
+meanstepsbyinterval[which.max(meanstepsbyinterval[,2]),1]
+&hellip;</p>
+
+<h2>Imputing missing values</h2>
+
+<h2>Are there differences in activity patterns between weekdays and weekends?</h2>
+
+<p>&hellip;{r}
+Day&lt;- weekdays(as.POSIXct(Activity[,2]))
+Activity &lt;-cbind(Activity,Day)
+Dayfactor &lt;- rep(&#39;Weekday&#39;,NROW(Activity))
+Activity &lt;-cbind(Activity,Dayfactor)
+Activity$Day &lt;- as.character(Activity$Day)
+Activity$Dayfactor &lt;- as.character(Activity$Dayfactor)
+for(i in 1:NROW(Activity))
+{</p>
+
+<p>if(Activity[i,4]==&ldquo;Sunday&rdquo;)
+ {</p>
+
+<p>Activity[i,5] =&ldquo;Weekend&rdquo;
+ }
+}
+Activity$Day &lt;- as.factor(Activity$Day)
+Activity$Dayfactor &lt;- as.factor(Activity$Dayfactor)
+meanbydaybyinterval&lt;- aggregate(Activity$steps ~ Activity$interval * Activity$Dayfactor , data =Activity, FUN=mean)
+xyplot(meanbydaybyinterval[,3] ~ meanbydaybyinterval[,1]|meanbydaybyinterval[,2], type =&#39;l&#39;)
+&hellip;</p>
+
+</body>
+
+</html>
+
